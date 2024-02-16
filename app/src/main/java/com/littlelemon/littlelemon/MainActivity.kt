@@ -10,12 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.littlelemon.littlelemon.navigation.NavigationComposable
 import com.littlelemon.littlelemon.ui.theme.LittleLemonTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            MyNavigation()
+
+            /*
+            version-00:
+
             LittleLemonTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -25,9 +32,23 @@ class MainActivity : ComponentActivity() {
                     Greeting("Android")
                 }
             }
+             */
+
+
         }
     }
+
+    // Step 02-02-04: Create the Navigation Composable
+    @Composable
+    fun MyNavigation() {
+        val navController = rememberNavController()
+        NavigationComposable(navController)
+    }
 }
+
+
+/*
+version-00:
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -44,3 +65,5 @@ fun GreetingPreview() {
         Greeting("Android")
     }
 }
+
+ */
