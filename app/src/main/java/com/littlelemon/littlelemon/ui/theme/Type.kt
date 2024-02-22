@@ -99,7 +99,7 @@ object LittleLemonType {
         fontFamily = KarlaFontFamily,    // Karla
         fontSize = 16.sp,
         fontWeight = FontWeight.W400,
-        lineHeight = 1.5.sp,
+        lineHeight = 24.sp, // 1.5 * fontSize
         color = LittleLemonColor.black,
 
     )// Karla. Regular(400). 16pt. 1.5 height. Max 65 characters per line.
