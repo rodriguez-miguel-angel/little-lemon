@@ -3,13 +3,12 @@ package com.littlelemon.littlelemon.navigation
 import android.content.Context.MODE_PRIVATE
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 import com.littlelemon.littlelemon.screens.Onboarding
-import com.littlelemon.littlelemon.screens.Home
+import com.littlelemon.littlelemon.ui.home.Home
 import com.littlelemon.littlelemon.screens.Profile
 
 // Step 02-02-04: Create the Navigation Composable

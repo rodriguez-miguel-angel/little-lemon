@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Step 02-04-01: Configure dependencies
+    id("kotlin-kapt")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -61,6 +64,26 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     // Step 02-02-01: Dependency
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    // Step 02-04-01: Configure dependencies
+    implementation("io.ktor:ktor-client-android:2.1.3")
+    implementation("io.ktor:ktor-client-content-negotiation:2.1.3")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:2.1.3")
+    implementation("androidx.room:room-runtime:2.4.3")
+    /*
+    This library supports using KSP instead of kapt, which greatly improves performance. Learn more: https://developer.android.com/studio/build/migrate-to-ksp
+    version-01:
+    kapt("androidx.room:room-compiler:2.4.3")
+    version-02:
+     */
+    kapt("androidx.room:room-compiler:2.4.3")
+    implementation("androidx.compose.runtime:runtime-livedata:1.3.2")
+    // Step 02-04-05: Display menu items
+    implementation("com.github.bumptech.glide:compose:1.0.0-alpha.1")
+    /*
+    See <https://stackoverflow.com/questions/59169162/not-found-import-kotlinx-coroutines-flow>
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
+     */
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.5.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
