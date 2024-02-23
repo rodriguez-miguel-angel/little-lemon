@@ -70,13 +70,31 @@ import kotlinx.coroutines.launch
 // See <https://www.baeldung.com/kotlin/static-methods>
 class MenuList {
 
+
     companion object {
+
+        /*
+        version-02:
+         */
+        var searchPhrase by mutableStateOf("")
+            private set
+        var category by mutableStateOf("")
+            private set
+        fun updateSearchPhrase(input: String) {
+            searchPhrase = input
+        }
+
+        fun updateCategory(input: String) {
+            category = input
+        }
+
         private var menuList by mutableStateOf(emptyList<MenuItemRoom>())
+
         fun getList(): List<MenuItemRoom> {
             return menuList
         }
 
-        fun setList(items: List<MenuItemRoom>) {
+        fun initList(items: List<MenuItemRoom>) {
             menuList = items
         }
     }
@@ -160,7 +178,13 @@ fun Header(navController:NavHostController) {
 @Composable
 fun Hero() {
 
-    var searchPhrase by remember { mutableStateOf("") }
+    /*
+    version-01:
+    var searchPhrase by remember {
+        mutableStateOf("")
+    }
+     */
+
 
     Box(modifier = Modifier
         .fillMaxWidth()
@@ -218,8 +242,8 @@ fun Hero() {
             }
             // Step 02-05-01: Filter menu items
             TextField(
-                value = searchPhrase,
-                onValueChange = { searchPhrase = it },
+                value = MenuList.searchPhrase,
+                onValueChange = { MenuList.updateSearchPhrase(it)},
                 label = { Text(
                     text = "Enter search phrase") },
                 maxLines = 1,
@@ -235,27 +259,6 @@ fun Hero() {
                     )
             )
 
-            //Log.d("searchPhrase", searchPhrase)
-            if(searchPhrase.isNotEmpty()) {
-                val menuList: List<MenuItemRoom> = MenuList.getList()
-                val filteredList = menuList.filter {
-                    it.title.contains(searchPhrase,ignoreCase=true)
-                }
-                MenuList.setList(filteredList)
-            } else {
-
-//                val context = LocalContext.current
-//                val database by lazy {
-//                    Room.databaseBuilder(context, AppDatabase::class.java, "database").build()
-//                }
-//                val menuList: List<MenuItemRoom>? = database.menuItemDao().getAll().value
-//                if (menuList != null) {
-//                    MenuList.setList(menuList)
-//                }
-
-
-
-            }
 
         }
     }
@@ -265,9 +268,23 @@ fun Hero() {
 @Composable
 fun Menu() {
 
-    val items: List<MenuItemRoom> = MenuList.getList()
+    var menuList: List<MenuItemRoom> = MenuList.getList()
 
-    var category by remember { mutableStateOf("") }
+    var items: List<MenuItemRoom> by remember {
+        mutableStateOf(emptyList<MenuItemRoom>())
+    }
+
+    menuList = if(MenuList.searchPhrase.isNotEmpty()) {
+        val filteredList = menuList.filter {
+            it.title.contains(MenuList.searchPhrase,ignoreCase=true)
+        }
+        filteredList
+    } else {
+        MenuList.getList()
+    }
+
+    items = menuList
+
 
     Column(
         verticalArrangement = Arrangement.Top,
@@ -280,6 +297,8 @@ fun Menu() {
             modifier = Modifier
                 .fillMaxWidth()
         )
+
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -289,7 +308,7 @@ fun Menu() {
         ) {
             OutlinedButton(
                 onClick = {
-                    MenuList.setList(FilterHelper().filterMenuItems(FilterType.Starters, items))
+                    MenuList.updateCategory("starters")
                 },
                 colors = ButtonDefaults.buttonColors(
                     LittleLemonColor.cloud
@@ -306,7 +325,7 @@ fun Menu() {
             }
             OutlinedButton(
                 onClick = {
-                    MenuList.setList(FilterHelper().filterMenuItems(FilterType.Mains, items))
+                    MenuList.updateCategory("mains")
                 },
                 colors = ButtonDefaults.buttonColors(
                     LittleLemonColor.cloud
@@ -323,7 +342,7 @@ fun Menu() {
             }
             OutlinedButton(
                 onClick = {
-                    MenuList.setList(FilterHelper().filterMenuItems(FilterType.Desserts, items))
+                    MenuList.updateCategory("desserts")
                 },
                 colors = ButtonDefaults.buttonColors(
                     LittleLemonColor.cloud
@@ -340,7 +359,7 @@ fun Menu() {
             }
             OutlinedButton(
                 onClick = {
-                    MenuList.setList(FilterHelper().filterMenuItems(FilterType.Drinks, items))
+                    MenuList.updateCategory("drinks")
                 },
                 colors = ButtonDefaults.buttonColors(
                     LittleLemonColor.cloud
@@ -356,9 +375,20 @@ fun Menu() {
                 )
             }
         }
+
+        // via category
+        menuList = if(MenuList.category.isNotEmpty()) {
+            val filteredList = filterMenu(menuList)
+            filteredList
+        } else {
+            MenuList.getList()
+        }
+        items = menuList
+
         Divider(
             thickness = 1.dp,
             color = LittleLemonColor.black)
+
         Box(
             modifier = Modifier
                 .fillMaxSize(),
@@ -382,6 +412,13 @@ fun Menu() {
     }
 }
 
+@Composable
+fun filterMenu(items: List<MenuItemRoom>): List<MenuItemRoom> {
+    val filteredList: List<MenuItemRoom> = items.filter {
+        it.category.contains(MenuList.category,ignoreCase=true)
+    }
+    return filteredList
+}
 
 // Step 02-04-05: Display menu items
 @Composable
@@ -390,7 +427,7 @@ fun MenuItems(items: List<MenuItemRoom>) {
     /*
     version-01:
      */
-    MenuList.setList(items)
+    MenuList.initList(items)
     /*
     version-02: TODO
     HomeViewModel().menuList = items
